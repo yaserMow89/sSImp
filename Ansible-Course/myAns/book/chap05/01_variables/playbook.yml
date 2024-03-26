@@ -1,0 +1,16 @@
+---
+- hosts: all
+  gather_facts: True
+
+  tasks: 
+    - name: Show the os of the target host =
+      ansible.builtin.debug:
+        msg: "The os is {{ ansible_os_family }}"
+    
+    - name: Show the whole gather_facts
+      ansible.builtin.debug:
+        var: ansible_facts
+    
+    - name: Print the os_family using the var
+      ansible.builtin.debug:
+        var: ansible_os_family

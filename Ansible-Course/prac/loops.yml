@@ -1,0 +1,18 @@
+---
+
+- hosts: localhost
+
+  vars: 
+    a: 1
+    b: [2,3]
+    c:
+      name: mike
+      age: 35
+      gender: male
+
+
+  tasks:
+    - name: test task
+      debug: 
+        msg: "he, {{item}}"
+      loop: "{{ c }}"

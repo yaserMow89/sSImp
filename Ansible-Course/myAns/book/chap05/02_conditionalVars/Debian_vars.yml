@@ -1,0 +1,4 @@
+---
+# Debian Vars file
+installation_module: apt
+apache_service_name: apache2

@@ -1,0 +1,31 @@
+---
+
+- hosts: all
+  gather_facts: True
+  tasks:
+    - name: Print the Hostvars for all hosts
+      ansible.builtin.debug:
+        var: hostvars
+    
+    - name: Print the inventory hostname of the host
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} is {{ hostvars[inventory_hostname]['ansible_host']}}"
+
+    - name: Print the shor inventory hostname
+      ansible.builtin.debug: 
+        var: inventory_hostname_short
+            
+    - name: Print the ansible_host name of each host
+      ansible.builtin.debug:
+        var: ansible_hostname
+    # - name: Print the IPs of each host
+    #   ansible.builtin.debug:
+    #     var: ansible_facts
+
+    # - name: Print the HostNames of the machines
+    #   ansible.builtin.debug:
+    #     var: ansible_hostname
+    
+    # - name: Print the IPs 
+    #   ansible.builtin.debug:
+    #     var: ipAddress

@@ -1,0 +1,17 @@
+---
+
+- hosts: localhost
+  become: true
+  vars:
+    path_to_app: "/etc/sssd/"
+
+  tasks:
+    - name: list the directory content
+      command: ls -la {{  path_to_app }}
+      register: dir_content
+
+    - name: display the content
+      debug:
+        msg: "{{ dir_content }}"
+
+

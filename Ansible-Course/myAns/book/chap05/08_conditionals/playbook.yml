@@ -1,0 +1,54 @@
+---
+- hosts: all
+  become: True
+  vars:
+    software_version_doted: "4.6.1"
+    software_version_dashed: "4-6-1"
+    # is_db_server: True
+  gather_facts: false
+  tasks:
+    - name: Install php
+      ansible.builtin.package:
+        name: php
+        state: present 
+    - name: Output the version of php
+      ansible.builtin.shell:
+        "php --version"
+      register: php_version
+    - name: Print my php version
+      ansible.builtin.debug:
+        var: php_version.stdout.split(' ')[1]
+    - name: Install Php 7.2 dev if php version is 7.2.24
+      ansible.builtin.package:
+        name: php7.2-dev
+        state: present
+      when: "'7.2.24' in php_version.stdout"
+    # - name: Copy hosts file
+    #   stat:
+    #     path: /etc/hosts
+    #   register: hosts_file
+    # - name: Print the state of the /etc/hosts file
+    #   ansible.builtin.debug:
+    #     var: hosts_file
+    # - name: Copy hosts file if it does not exist
+    #   ansible.builtin.copy:
+    #     src=./my_hosts_file
+    #     dest=/etc/hosts
+    #   when: hosts_file.stat.exists == false
+    # - name: Install a mysql-server
+    #   package:
+    #     name: mysql-server
+    #     state: present
+    #   when: (is_db_server is defined ) and (is_db_server == False)
+    # - name: Do something
+    #   ansible.builtin.debug:
+    #     msg: "HI Yaser, your software major version is: {{software_version_doted.split('.')[0] }} and it is correct"
+    #   when: software_version_doted.split('.')[0] == '2'
+    # - name: Do the samething but with dashes
+    #   ansible.builtin.debug:
+    #     msg: "Your software minor version is correct and it is: {{software_version_dashed.split('-')[1]}}.{{software_version_dashed.split('-')[2]}}"
+    #   register: my_command_result
+
+    # - name: Print the registered value
+    #   ansible.builtin.debug:
+    #     var: my_command_result

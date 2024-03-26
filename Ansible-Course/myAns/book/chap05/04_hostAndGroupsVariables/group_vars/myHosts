@@ -1,0 +1,2 @@
+---
+ipAddress: "{{ansible_facts.eth1.ipv4.address}}"

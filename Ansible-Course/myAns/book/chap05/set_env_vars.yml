@@ -1,0 +1,75 @@
+---
+- name: Playbook for setting test ENV_VARS on a remote machine
+  hosts: all
+  vars_files:
+    vars.yml
+
+  tasks:
+    - name: Configure the proxy
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: "{{ proxy_state }}"
+      with_items:
+        - regexp: "^http_proxy="
+          line: "http_proxy=http://example-proxy:80/"
+        - regexp: "^https_proxy="
+          line: "https_proxy=https://example-proxy:443/"
+        - regexp: "^ftp_proxy="
+          line: "ftp_proxy=http://example.com:80/"
+      become: True
+
+    # - name: Download a file (env for one task)
+    #   ansible.builtin.get_url:
+    #     url: http://www.example.com/file.tar.gz
+    #     dest: ~/Downloads/file.tar.gz
+    #   environment:
+    #     http_proxy: http://example-proxy:80/
+    # - name: Add env Vars on my remote host
+    #   ansible.builtin.lineinfile:
+    #     dest: ~/.bashrc
+    #     create: true
+    #     regexp: '^ENV_VAR_FIRST='
+    #     line: "ENV_VAR_FIRST=this is my var"
+    
+    # # Don't know why, but this does not print the var
+    # - name: Source bash
+    #   shell: "source /home/vagrant/.bashrc && echo $ENV_VAR_FIRST"
+    #   register: foo
+    #   args: 
+    #     executable: /bin/bash
+
+    # - name: Print the Value of the ENV Var
+    #   ansible.builtin.debug:
+    #     msg: "foo is: {{foo.stdout}}"
+
+    # - name: Adding global env var
+    #   ansible.builtin.lineinfile:
+    #     path: /etc/environment
+    #     regexp: '^Sec_VAR='
+    #     line: 'Sec_VAR=this is the second var'
+    #   become: true
+
+    # # The following is only for mySelf
+    # - name: Remove the line with an extra ^
+    #   ansible.builtin.lineinfile:
+    #     path: '/etc/environment'
+    #     regexp: '^\^Sec_VAR='
+    #     state: absent
+    #   become: true 
+
+    # - name: Add a global ENV
+    #   lineinfile: 
+    #     path: '/etc/environment'
+    #     regexp: '^MY_SEC_ENV='
+    #     line: 'MY_SEC_ENV={{secon_env}}'
+    #   become: yes
+    
+    # - name: read the second Env
+    #   ansible.builtin.shell: "echo $secon_env"
+    #   register: my_env
+
+    # - name: Print the Second env
+    #   ansible.builtin.debug:
+    #     msg: " MY second var is: {{my_env.stdout}}"

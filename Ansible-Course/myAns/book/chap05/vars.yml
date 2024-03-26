@@ -1,0 +1,4 @@
+---
+first_env: "this is for test"
+secon_env: "this is also fort test"
+proxy_state: absent

@@ -1,0 +1,26 @@
+---
+
+- hosts: localhost
+
+  # vars:
+
+  #   - file_path: /opt/config_dir
+
+  tasks:
+
+  - name: Undefined vars
+    debug:
+      var: ansible_facts
+    register: my_facts 
+      
+  # - name: print
+  #   shell: cat "{{dir}}/passwd"
+  #   register: passwd_file
+  
+  - name: print
+    debug:
+      var: my_facts | dict2items
+  
+  - name: print
+    debug:
+      msg: my_facts

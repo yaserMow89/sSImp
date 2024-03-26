@@ -1,0 +1,42 @@
+---
+- name: Playbook for deploying ubuntu Slor App
+  hosts: all
+  become: true
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Update cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+    - name: Install Java
+      ansible.builtin.apt:
+        name: openjdk-11-jdk
+        state: present
+    - name: Downloding the source
+      ansible.builtin.get_url:
+        url: "https://archive.apache.org/dist/lucene/solr/{{ solr_version }}/solr-{{ solr_version }}.tgz"
+        dest: "{{ download_dir }}/solr-{{ solr_version }}.tgz" # Full path is given to avoid subsequent downloads on the subsequent runs of the playbook
+        checksum: "{{ solr_checksum }}"
+        # mode: O755
+    - name: Expand Solr
+      ansible.builtin.unarchive:
+        src: "{{ download_dir }}/solr-{{ solr_version }}.tgz"
+        dest: "{{ download_dir }}"
+        remote_src: true
+        creates: "{{ download_dir }}/solr-{{ solr_version }}/README.txt"
+    - name: Run Solr installation script
+      ansible.builtin.command: >
+        {{ download_dir }}/solr-{{ solr_version }}/bin/install_solr_service.sh
+        {{ download_dir }}/solr-{{ solr_version }}.tgz
+        -i /opt
+        -d /var/solr
+        -u solr
+        -s solr
+        -p 8983
+        creates={{ solr_dir }}/bin/solr
+    - name: Ensure solr is started and enabled on boot
+      ansible.builtin.service:
+        name: solr
+        state: started
+        enabled: true

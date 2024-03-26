@@ -1,0 +1,59 @@
+---
+- hosts: all
+  become: yes
+
+  tasks: 
+    - name: install appache 
+      yum: 
+        name: 
+          - httpd
+          - httpd-devel 
+        state: present
+
+    - name: delete the current httpd file
+      command: 
+        mv /etc/httpd/conf/httpd.conf /tmp/
+
+    - name: copy conf files
+      copy:
+        src: "{{item.src}}"
+        dest: "{{item.dest}}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items: 
+        - src: httpd.conf
+          dest: /etc/httpd/conf/
+        - src: httpd-vhost.conf
+          dest: /etc/httpd/conf/
+
+    - name: make sure httpd is running
+      service:
+        name: httpd
+        state: started
+        enabled: yes   
+
+
+
+  # tasks: 
+  #   - name: install httpd
+  #     yum: 
+  #       name: httpd
+  #       state: latest
+  #   # - name: print current working directory
+  #   #   command: >
+  #   #     pwd
+  #   #     register my-dir
+
+  #   # - name: print the dir
+  #   #   debug: 
+  #   #     var: my-dir
+  #   - name: backup my current config file and create a new conf file
+  #     command: >
+  #       mv /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.backup
+  #   - command: > 
+  #       touch httpd.conf && echo "this is test" > httpd.conf
+  #   - command: >
+  #       mv httpd.conf /etc/httpd/conf/
+  #   - name: start appache
+  #     command: service httpd start 

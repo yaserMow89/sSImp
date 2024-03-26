@@ -1,0 +1,4 @@
+---
+# RedHat Vars file 
+installation_module: yum
+apache_service_name: httpd

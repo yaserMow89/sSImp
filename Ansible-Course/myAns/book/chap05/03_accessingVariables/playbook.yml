@@ -1,0 +1,17 @@
+---
+- hosts: all
+
+  gather_facts: true
+
+  tasks:
+    - name: Print the Interface details
+      ansible.builtin.debug:
+        var: ansible_enp0s8
+    
+    - name: Print the IP of the Interface
+      ansible.builtin.debug:
+        msg: "The IP of the host is: {{ ansible_enp0s8.ipv4.address}}"
+    
+    - name: Print the IP using square brackets
+      ansible.builtin.debug:
+        msg: "The IP is: {{ ansible_enp0s8['ipv4']['address']}}"
