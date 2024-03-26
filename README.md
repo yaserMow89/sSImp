@@ -1,4 +1,4 @@
-Readme for Ansible
+Readme
 ==================
 
-*Everything related to Ansible*
+This repo works as a big *cheatsheet* for me
