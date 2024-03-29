@@ -1,0 +1,17 @@
+apiVersion: v1 #for replicationController api is v1
+kind: ReplicationController
+metadata:
+  name: my-rep-cont
+  labels:
+    firstLabel: first-label
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: test-cont
+          image: nginx
+    metadata:
+      name: container-name
+      labels:
+        firstLabel: first-label

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: my-replica-set
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      firstLabel: first-label
+
+  template:
+    spec:
+      containers:
+        - image: nginx
+          name: test-container
+    metadata:
+        labels:
+          firstLabel: first-label
+        name: my-test-cont

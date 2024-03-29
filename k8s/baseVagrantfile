@@ -1,0 +1,40 @@
+VAGRANTFILE_API_VERSION = 2
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # First Ubuntu box
+  config.vm.define "ubuntu_box" do |ubuntu|
+    ubuntu.vm.box = "ubuntu/bionic64"
+    ubuntu.vm.hostname = "ubuntuHost1"
+    ubuntu.vm.network :private_network, ip: "192.168.56.5"
+    ubuntu.ssh.insert_key = false
+    ubuntu.vm.synced_folder ".", "/vagrant", disabled: true
+
+    ubuntu.vm.provider :virtualbox do |v|
+      v.memory = 1024
+    end
+  end
+  # Second Ubuntu box
+  config.vm.define "ubuntu_box" do |ubuntu|
+    ubuntu.vm.box = "ubuntu/bionic64"
+    ubuntu.vm.hostname = "ubuntuHost2"
+    ubuntu.vm.network :private_network, ip: "192.168.56.6"
+    ubuntu.ssh.insert_key = false
+    ubuntu.vm.synced_folder ".", "/vagrant", disabled: true
+
+    ubuntu.vm.provider :virtualbox do |v|
+      v.memory = 1024
+    end
+  end
+  # RHEL box
+  config.vm.define "rhel_box" do |rhel|
+    rhel.vm.box = "generic/rhel8"  # Use the appropriate RHEL box
+    rhel.vm.hostname = "rhelHost"
+    rhel.vm.network :private_network, ip: "192.168.56.7"
+    rhel.ssh.insert_key = false
+    rhel.vm.synced_folder ".", "/vagrant", disabled: true
+
+    rhel.vm.provider :virtualbox do |v|
+      v.memory = 1024
+    end
+  end
+end
