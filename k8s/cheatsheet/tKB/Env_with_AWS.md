@@ -26,7 +26,7 @@ aws eks update-kubeconfig --region <region> --name <name>
 ```
 kubectl get nodes
 ```
-
+x
 - To get the current clusters
 ```
 kubectl config get-clusters
