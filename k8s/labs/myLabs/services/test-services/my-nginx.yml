@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+
+spec:
+  replicas: 20
+  selector:
+    matchLabels:
+      app: my-nginx
+
+  revisionHistoryLimit: 3
+  progressDeadlineSeconds: 200
+  minReadySeconds: 30
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 1
+  template:
+    spec:
+      containers:
+        - name: nginx-latest
+          image: nginx:perl
+    metadata:
+      name: my-nginx-pod
+      labels:
+        app: my-nginx

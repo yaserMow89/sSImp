@@ -47,3 +47,5 @@ NameSpaces - tKB
 - **Deploying** objects into specific Namespaces:
    - `kubectl create -f <fileName> -n <NamespaceName>` or `--namespace <NamespaceName>` --> **Imperatively**
    - Specify with `yaml` --> **Declaratively**
+
+- To see **all pods** across **all namespaces** you can use `k get pods --all-namespaces`

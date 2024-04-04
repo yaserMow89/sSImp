@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-dep
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      rs-label: labeled
+
+  template:
+    spec:
+      containers:
+        - name: httpd-cont
+          image: httpd:latest
+    metadata:
+      name: my-cont
+      labels:
+        rs-label: labeled
+        my-label: set
+

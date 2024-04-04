@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: my-apache
+  name: my-apache
+spec:
+  replicas: 15
+  selector:
+    matchLabels:
+      app: front-end
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: front-end 
+    spec:
+      containers:
+      - image: httpd:latest
+        name: httpd
