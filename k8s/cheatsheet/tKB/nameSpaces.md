@@ -42,7 +42,7 @@ NameSpaces - tKB
 - Deleting using `yaml` --> Declarative
 - **Config a *default* Namespace for all your commands** `kubectl config set-context --current --namespace <NamespaceName>`
    * To get the **current** default Namespace `kubectl config view --minify`
-   * **NOTE** If you have just created you Namespace and switched to it as the default and now if you do `kubectl get nodes` you will see all the nodes inside the cluster, it is because **nodes** are cluster wide objects, and they don't belong to any Namespaces; so doesn't make any differences which Namespace are you in, they are visible on all
+   * **NOTE** If you have just created your Namespace and switched to it as the default and now if you do `kubectl get nodes` you will see all the nodes inside the cluster, it is because **nodes** are cluster wide objects, and they don't belong to any Namespaces; so doesn't make any differences which Namespace are you in, they are visible in all
       * You can run `kubectl api-resources` to see which resources can be given to Namespaces and which ones can't
 - **Deploying** objects into specific Namespaces:
    - `kubectl create -f <fileName> -n <NamespaceName>` or `--namespace <NamespaceName>` --> **Imperatively**
