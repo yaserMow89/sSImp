@@ -47,9 +47,9 @@ Some of these contents are taken from this [link](https://sysdig.com/blog/kubern
       spec:
          hard:
             pods: "<numberOfAllowedPods>"
-            requests.cpu: "<numberOfAllowedPods>"
+            requests.cpu: "<numberOfAllowedCPUs>"
             requests.memory: <allowedMemory>Gi
-            limits.cpu: "<numberOfAllowedPods>"
+            limits.cpu: "<numberOfAllowedCPUs>"
             limits.memory: <allowedMemory>Gi
       ```
       - *limits*:

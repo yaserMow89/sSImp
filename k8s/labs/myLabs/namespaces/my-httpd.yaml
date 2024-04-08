@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-httpd-pods
+  namespace: dev
+
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: fe
+
+  template:
+    spec:
+      containers:
+        - image: httpd
+          name: my-httpd-container
+    metadata:
+      labels:
+        app: fe
+      name: non-of-your-business
