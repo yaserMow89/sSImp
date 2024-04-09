@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-dep
+
+spec:
+  selector:
+    matchLabels:
+      app: fe
+  replicas: 4
+
+  template:
+    spec:
+      containers:
+        - image: httpd:latest
+          name: my-httpd
+      nodeName: ip-172-31-88-155.ec2.internal
+    metadata:
+      labels:
+       app: fe

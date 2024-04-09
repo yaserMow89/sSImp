@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: rs-for-nginx
+
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      run: nginx 
