@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-dep
+
+spec:
+  template:
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+      tolerations:
+        - key: "app"
+          value: "test"
+          effect: "NoExecute"
+          operator: "Equal"
+    metadata:
+      labels:
+        app: fe
+  selector:
+    matchLabels:
+      app: fe
+  replicas: 10

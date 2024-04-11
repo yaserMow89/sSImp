@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-dep
+
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: httpd-front
+
+  template:
+    spec:
+      containers:
+        - name: httpd
+          image: httpd:latest
+      tolerations:
+        - key: "app"
+          value: "httpd"
+          operator: "Equal"
+          effect: "NoExecute"
+
+    metadata:
+      labels:
+        app: httpd-front
