@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-app
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: green-fe
+
+  template:
+    spec:
+      containers:
+        - image: mmumshad/simple-webapp-color
+          name: green-app
+          env:
+            - name: APP_MODE
+              valueFrom:
+                configMapKeyRef:
+                  name: green-config
+                  key: APP_MODE
+            - name: APP_COLOR
+              value: "green"
+    metadata:
+      labels:
+        app: green-fe

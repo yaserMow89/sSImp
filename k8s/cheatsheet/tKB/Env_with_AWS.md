@@ -16,9 +16,8 @@ Setting up the Env on AWS Using AGC Playgrounds
          * **AmazonEC2ContainerRegistryReadOnly**
          * **AmazonEKS_CNI_Policy**
          * **AmazonEKSWorkerNodePolicy**
-5. Go to *IAM* --> *Users* --> *cloud_user* --> *Security Credentials* tab --> *Access Keys* --> *Create access key* --> Download the file
-6. on terminal type: `aws configure` and enter the Credentials from the previous step
-7. The following command to add the cluster into your `kubeconfig`
+5. on terminal type: `aws configure` and enter the Credentials from the *ACG*; these credentials are: *Access Key Id* and *Secret Access Key*
+6. The following command to add the cluster into your `kubeconfig`
 ```
 aws eks update-kubeconfig --region <region> --name <name>
 ```

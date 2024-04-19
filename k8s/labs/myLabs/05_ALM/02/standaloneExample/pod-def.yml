@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: color-app
+
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: color-app
+  template:
+    spec:
+      containers:
+        - image: mmumshad/simple-webapp-color
+          name: color-app
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: app-config
+
+    metadata:
+      labels:
+        app: color-app

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fi-conf
+data:
+  name: "Test"
+  dep: "depTest"
+  major: 'majTest'
