@@ -280,3 +280,79 @@ openssl x509 -req -in <adminCSRName>.csr -CA <caCertName>.crt -CAkey <caKeyName>
       ```
       - Sometimes if the `kube-api` and the `kube-etcd` both fail, the `kubectl` won't function anymore; in such scenarios you can go one level deeper, you can use *`docker`* to get the logs for the pods
          - You can use `docker ps -a` to get all the containers and then use the `docker logs <contID>` to get the logs for that specific container
+
+# 152. Certificates `API`
+- so far --> `CA` Server + `Crts` for components
+- A new admin
+   - Generates `Key` + `CSR`
+   - Current Admin Signs the `CSR` by `CA` Server
+- But it expires after some time
+- Where is the **CA** Server
+   - It is only a pair of key and cert file
+   - Whoever has access to these can sign any cert for the k8s environment
+   - Just need to store them in a save place, and where ever they are stored that system becomes the **CA** Server
+- Whenever you want to sign a cert, you can login to that server and sing it
+- As of now, the `master-node` is working as our `CA`
+   - The same approach is also applied in `kubeadm`
+## Certificate `API`
+- To automate the signing and renewing process of certificates
+- An admin who already has access to the cluster, creates an object called `CertificateSigningRequest`
+- The request can be **reviewed** and **approved** by the cluster admins
+- And finally shared with the user
+- How it is done?
+   1. User generates the key `openssl genrsa -out <userKey>.key 2048`
+   2. Creates the `CSR` with their name on it `openssl req -new -key <userKey>.key -subj "/CN=<userName>" -out <userCSR>.csr`
+   3. The admin creates a `CertificateSigningRequest` object
+   ```
+   apiVersion: certificates.k8s.io/v1
+   kind: CertificateSigningRequests
+   metadata:
+      name: <maybeUserName>
+   spec:
+      expirationSeconds: 600 #seconds, it was in the lecture
+      usages:
+      - digital signature
+      - key encipherment
+      - server auth
+      request:
+         # The base64 format of the CSR created by the user
+         # to get it just do the following
+            # cat <userCSR>.csr | base64
+            # and paste it here
+   ```
+      - Here is one which worked:
+      ```
+      apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: akshay
+spec:
+  signerName: kubernetes.io/kube-apiserver-client
+  groups:
+    - system:authenticated
+  usages:
+    - client auth
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1ZqQ0NBVDRDQVFBd0VURVBNQTBHQTFVRUF3d0dZV3R6YUdGNU1JSUJJakFOQmdrcWhraUc5dzBCQVFFRgpBQU9DQVE4QU1JSUJDZ0tDQVFFQXpkSktBWGhxOUNGbWxqN3lLWE1hcjRIVGduNndackVWejNFQVorNVRuWllICjVob0dDczQ0QjNYektWT0NMeDFWeFBhMHZ2dWp1ZE9ZZWM5WkpRZ0lNZ291SWV1R0kxcFI2aWF1dDBRaE5LV3YKTklVL2RIcWd0cXREdzY4ci94WGtkZHhtckhGZzZZRklPYnlKZTVOTExCRzlJVHhxeGY0WUh0NHZzcU1DcnU5QgpGbnFlMU52MDdLL3ZzODZFWmZFM2ZXQ29EYWpUTDZ2Sk55cmo5dm1vb09QZ3Z4L0ZzWDduVG5OTWphdXdIOVRzCnpDbGFlak1qLzVkZGNVM0l5ZVhJOEtib05teHZkVzJwclNuZ3FlWk9ScWh5TEJ4M2svR3hoclAxakVwSnBnaXgKcjM1TGt3aWtxUy9NQU1iWEtPeDNGdW9wL2VLVmIrd2dYOGxxT3FZeExRSURBUUFCb0FBd0RRWUpLb1pJaHZjTgpBUUVMQlFBRGdnRUJBRGl4RitSQW5yV3JxU2UycVczMEREYm9peW1xUDNzTytTcTlocktBKzVjaTZGWjNKUEJxCnl6RHVEenY0ZTljS0Z0STBOT1lvcjBHWEJ1eTdTckQ1a3BncGY5T21nVVFzUDZkeDYxN3VoY3hhRGdYdi9MVmoKRTFEVFpqVXZpaUU3V1JKcGJqL1plZ3V6RGtYMVdtVWdNTGxNRUZ4V3hjR210dkdzc0hraU50WTJ2d1oxMUJzNApnRkNBSTZ4REFUOHZRM1hSQ3Z4OTZlT0wzY092NjVWRDdtbHBUazJDVWFOSTdyMkhoY2dOOFRYMWJHYUkySS8wCjZ0YjkvWjFMWlZKVHpTUzlmU1dKVTFncU40WDVabVMydVZLNVNlelhtbmM5emFjR2ZyRFBqS1M2YlZIRnFVcEoKbFJPQnYwTytiVzd0ZkxOdFNaSFM3Ly9ZVjNlQkhycFprQm89Ci0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQo=
+      ```
+         - The `.spec.request` field was generated using this
+         ```
+         cat akshay.csr | base64 -w 0
+         ```
+            - `-w 0` prints in a **Single Line**
+   4. All the `CSRs` on the cluster can be seen by the admins using `k get csr`
+   5. Can be **Approved** using the command `k certificate approve <csrName>`
+      - K8S signs it using the `CA` key and generates a signed certificate for the user
+      - Can be **Rejected** using `k certificate deny <csrName>`
+      - Can be **Deleted** using `k delete csr <csrName>`
+   6. The Signed Certificates can be viewed `k get csr` and `k get csr <csrName> -o yaml`
+      - The part that we are concerned with is at `status.certificates`
+   7. It is in `base64` you just have to decode it `echo "status.certificates"|base64 --decode`
+   8. Share it with the user
+- All the certificate related operations are done by the `controller-manager`
+   - The responsible components within the `controller-manager` are
+      - `CSR-Approving`
+      - `CSR-Signing`
+   - The controller manager has two options
+      - `--cluster-signing-cert-file`
+      - `--cluster-signing-key-file`
+      - For `CA` key and cert, in order to sign other certs
