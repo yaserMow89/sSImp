@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: c-ip
+  name: c-ip
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: c-ip
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: c-ip 
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+status: {}

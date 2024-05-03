@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: s-web-app
+  name: s-web-app
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: s-web-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: s-web-app
+    spec:
+      containers:
+      - image: mmumshad/simple-webapp
+        name: simple-webapp
+        resources: {}
+status: {}

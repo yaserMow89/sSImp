@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: fe-app
+    appNo: third
+    rsrc: deploy
+    tier: prod
+  name: fe-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fe-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: fe-app
+        usage: core
+        ou: sells
+    spec:
+      containers:
+      - image: httpd
+        name: httpd
+        resources: {}
+status: {}

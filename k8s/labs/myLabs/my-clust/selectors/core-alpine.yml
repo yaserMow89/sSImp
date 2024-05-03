@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: core-app
+    appNo: first-app
+    rsrc: deploy 
+    tier: prod
+  name: core-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: core-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: core-app
+        usage: core
+    spec:
+      containers:
+      - image: alpine:edge
+        name: alpine
+        resources: {}
+status: {}

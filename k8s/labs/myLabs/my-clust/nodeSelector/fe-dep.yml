@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: fe-dep
+  name: fe-dep
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fe-dep
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: fe-dep
+    spec:
+      nodeSelector:
+        fe: "true"
+      containers:
+      - image: httpd
+        name: httpd
+        resources: {}
+status: {}

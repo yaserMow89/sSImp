@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+  name: t-nginx-p
+spec:
+  containers:
+  - image: nginx
+    name: t-nginx-p
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

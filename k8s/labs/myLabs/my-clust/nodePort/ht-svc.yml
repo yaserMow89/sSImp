@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ht-svc
+  name: ht-svc
+spec:
+  ports:
+  - name: ht-svc-np 
+    port: 4040
+    nodePort: 30001
+    protocol: TCP
+    targetPort: 6379 
+  selector:
+    app: ht-dep
+  type: NodePort
+status:
+  loadBalancer: {}

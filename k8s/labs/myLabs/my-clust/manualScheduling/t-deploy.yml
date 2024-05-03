@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: t-nginx
+  name: t-nginx
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: t-nginx
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: t-nginx
+    spec:
+      nodeName: wn2-k8s
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+status: {}

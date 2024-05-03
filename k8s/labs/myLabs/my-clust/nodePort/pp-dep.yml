@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ppd-dep
+  name: pp-dep
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: pp-dep
+  strategy: 
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: pp-dep
+    spec:
+      containers:
+      - image: httpd
+        name: httpd
+        resources: {}
+status: {}

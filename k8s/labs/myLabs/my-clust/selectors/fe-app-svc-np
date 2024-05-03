@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: fe-app-svc-np
+    rsrc: svc
+    tier: prod
+  name: fe-app-svc-np
+spec:
+  ports:
+  - name: 8080-80
+    nodePort: 30000
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: fe-app
+  type: NodePort
+status:
+  loadBalancer: {}

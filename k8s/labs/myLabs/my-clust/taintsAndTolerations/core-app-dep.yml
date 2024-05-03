@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: core-app
+  name: core-app
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: core-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: core-app
+    spec:
+      tolerations:
+      - key: "app"
+        operator: "Exists"
+        effect: "NoExecute"
+      containers:
+      - image: httpd 
+        name: alpine
+        resources: {}
+      nodeName: wn2-k8s
+status: {}

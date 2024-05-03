@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mgt-system
+    appNo: second-app
+    rsrc: deploy
+    tier: prod
+  name: mgt-system
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mgt-system
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mgt-system
+        usage: core
+        ou: mgt
+    spec:
+      containers:
+      - image: ubuntu
+        name: ubuntu
+        resources: {}
+status: {}
