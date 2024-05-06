@@ -1,0 +1,48 @@
+Network Namespaces
+==================
+
+- To create a **Network NS** in a linux host `ip netns add <name>`
+- `ip link` --> to list network interfaces
+- `ip netns exec <nsName> ip link` --> to list network interfaces within an ns
+   - Or can also be done using `ip -n <nsName> link`
+- `arp` to see **arp** table in a linux host
+- `ip netns exec arp` --> to see **arp** table in an ns
+- You can connect two namespace with each other using a **Pipe** or virtual interface
+   - `ip link add <oneEndNameForPipe> type veth peer name <otherEndNameForPipe>` --> creates a pipe
+   - `ip link set <oneEndNameForPipe> netns <nsName>` --> attaches one end to a NameSpace
+   - `ip link set <otherEndNameForPipe> netns <nsName>` --> attaches the other end to another namespace
+   - Now you can assign ip to each end of the **pipe**
+      - `ip -n <nsName> addr add 192.168.15.1 dev <oneEndNameForPipe>`
+      - The same goes for other end `ip -n <nsName> addr add 192.168.15.2 dev <otherEndNameForPipe>`
+   - Now bring up the **pipe** ends
+      - `ip -n <nsName> link set <oneEndNameForPipe> up`
+      - `ip - n <nsName> link set <otherEndNameForPipe> up`
+   - Now the namespaces should be able to ping each other `ip netns exec <nsName> ping <ipForOtherEnd>`
+
+- Above approach is okay if you have a few number of NameSpaces, but in case you have lots of them it is better to connect them via a switch (virtual in this case), like in real world scenarios; and then connect the NameSpaces to the virtual switch
+- A virtual switch can be created using `ip link add <bridgeName> type bridge`
+   - Should be visible as output of `ip link` command
+   - Can be brought up using `ip link set dev <bridgeName> up`
+- Now NameSpaces can connect to it, but for the **host** it is like an **Interface**
+- You have to create **Pipe** links for each of the namespaces and connect them
+- `ip link add <nsSideName> type veth peer name <bridgeSideName>`
+   - Create the same cable for each of the namespaces that you want to connect to the bridge
+- Now same as before you should attach both ends; one end goes to the namespace and the other goes to the bridge
+   - `ip link set <nsSideName> netns <nsName>` --> connects one end to the namespace
+   - `ip link set <bridgeSideName> master <bridgeName>`
+- Follow the same procedure for each of the links and namespaces
+- Now we should assign IP addresses also
+   - The same procedure as earlier can be followed for this also
+   - `ip -n <nsName> addr add 192.168.15.1 dev <nsSideName>`
+- Now the interfaces withing the namespaces can reach each other
+- We can also establish connectivity between the namespaces interfaces and the host
+   - We only need to assign an IP to the bridge interface from host `ip addr add 192.168.15.5 dev <bridgeName>`
+   - Now the Namespaces can be reached via the bridge network that we have
+- Still we don't have connectivity from within our namespaces to the outside world, all the communication is possible within the host
+   - This can also be done by creating a **routing** entry from our **namespaces** to the **outside** world
+   - We can add a route entry in the namespace routing table: `ip netns exec <nsName> ip route add 192.168.1.0/24 via 192.168.15.5`
+      - By this only one-direction routing is setup, but response coming back from the outside hosts can't find their way to the namespace network
+      - This can be mitigated by adding a **NAT** entry in our host
+         - `iptables -t nat -A POSTROUTING -s 192.168.15.0/24 -j MASQUERADE`
+      - Now we should be able to reach the outside world from within the namespaces network
+   - We can make whole internet connectivity within the namespaces by adding a default route inside them `ip netns exec <nsName> ip route add default via 192.168.15.5`

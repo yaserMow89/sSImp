@@ -33,3 +33,44 @@ affinity:
       2. `preferredDuringSchedulingIgnoredDuringExecution`
          - No matching node, the affinity rule will be ignored
          - place on any available node
+
+   - The declaration for above two methods is different within the definition files:
+      - For `requiredDuringSchedulingIgnoredDuringExecution` it is as shown above
+      - For `preferredDuringSchedulingIgnoredDuringExecution` it is as below:
+      ```
+      ...
+      affinity:
+         nodeAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+               - weight: <givenWeight>
+                 preference:
+                  matchExpressions:
+                     - key: <key>
+                       operator: <operator>
+                       values:
+                        - <vals>
+      ...
+      ```
+
+   - It is also possible to define both at the same time same as below:
+   ```
+   ...
+   affinity:
+      nodeAffinity:
+         preferredDuringSchedulingIgnoredDuringExecution:
+         - weight: 1
+           preference:
+             matchExpressions:
+               - key: <key>
+                 operator: <operator>
+                 values:
+                   - <vals>
+         requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+               - matchExpressions:
+                  - key: <key>
+                    operator: <operator>
+                    values:
+                     - <vals>
+   ...
+   ```

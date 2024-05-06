@@ -2,10 +2,9 @@ Resource Requirements and Limits
 ================================
 
 ## Resource Requests
-   - Min ammount of resources
-   - Guaranteed amount of resources
+- Min ammount of resources
+- Guaranteed amount of resources
 ## Resource limits
-
 - Can be distinct between many containers in a pod
 - Are specified uner `.spec.containers.resources` in pod, below is an example:
 ```
