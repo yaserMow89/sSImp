@@ -45,4 +45,12 @@ Pod Networking
             - Should contain a *`DEL`* section
          - Script is ran with the container name and namespace
             - `Schript.sh add <container> <namespace>`
-            
+
+
+### Some Useful commands
+- **IP range for PODS** To find the IP Range for the **PODS** on your cluster, you can find the network solution and then look for the logs on it and it will be found under `ipalloc-range`
+- **IP range for SVCs** This is passed as option to the *`kube-apiserver`*, can be spotted either in it's `manifest` file (`/etc/kubernetes/manifests/kub-apiserver.yml`) or looking at the processes (`ps aux`), the flag name is `--service-cluster-ip-range`
+- **Kube-Proxy**, looking at logs from the nodes `kube-proxy` pods and searching for the word `Using` will get you the proxy being used by the `kube-proxy` within the cluster
+```
+k logs <kube-proxyPodForANode> -n kube-system | grep -i 'using'
+```

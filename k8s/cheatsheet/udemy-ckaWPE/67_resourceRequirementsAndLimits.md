@@ -73,7 +73,7 @@ resources:
          memory: <memoryLimitMax>
         min:
          memory: <memoryRequestMin>
-        type: container
+        type: Container
    ```
    - They are effective on **DuringScheduling** time of a pod, with respect to pod lifecycle
       - Doesn't effect the already running pods (**DuringExecution**)
