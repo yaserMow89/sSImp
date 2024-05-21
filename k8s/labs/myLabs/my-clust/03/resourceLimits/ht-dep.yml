@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: h-dep
+  name: h-dep
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: h-dep
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: h-dep
+    spec:
+      containers:
+      - image: httpd
+        name: httpd
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256M
+status: {}

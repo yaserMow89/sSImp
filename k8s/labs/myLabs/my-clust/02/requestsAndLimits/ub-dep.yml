@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ub-dep
+  name: ub-dep
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ub-dep
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ub-dep
+    spec:
+      containers:
+      - image: ubuntu
+        name: ubuntu
+        resources: {}
+status: {}

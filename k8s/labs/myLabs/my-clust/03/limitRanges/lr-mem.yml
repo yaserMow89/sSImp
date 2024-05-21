@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: ht-app-mem
+  namespace: lr-test
+spec:
+  limits:
+    - default:
+        memory: 512M
+      defaultRequest:
+        memory: 256M
+      min:
+        memory: 128M
+      max:
+        memory: 768M
+      type: Container

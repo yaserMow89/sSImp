@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: fe
+  name: fe
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fe
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: fe
+    spec:
+      containers:
+      - image: httpd
+        name: httpd
+        resources:
+          limits:
+            memory: 158M
+            cpu: 158m
+          requests:
+            cpu: 150m
+            memory: 150M
+status: {}

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: db-dep
+  name: db-dep
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: db-dep
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: db-dep
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - operator: NotIn
+                    key: app
+                    values:
+                      - fe
+      containers:
+      - image: redis:latest
+        name: redis
+        resources: {}
+status: {}

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: dev-lr
+  namespace: dev
+spec:
+  limits:
+    - default:
+        cpu: 512m
+        memory: 512M
+      defaultRequest:
+        cpu: 256m 
+        memory: 256M
+      min: 
+        cpu: 128m
+        memory: 128M
+      max:
+        cpu: 1
+        memory: 1G
+      type: Container

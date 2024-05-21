@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ht-dep
+  name: ht-dep
+  namespace: third-ns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ht-dep
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ht-dep
+    spec:
+      containers:
+      - image: httpd
+        name: httpd
+        resources: {}
+status: {}
