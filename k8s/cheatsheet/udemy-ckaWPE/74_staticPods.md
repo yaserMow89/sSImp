@@ -11,7 +11,7 @@ Static Pods
 - Only pods can be created as static
    - *kubelet* works at a pod level, and can only understand pods
 - The directory is given as:
-- `pus aux | grep -i kubelet`
+- `ps aux | grep -i kubelet`
 - Usually it is at `/var/lib/kubelet/config.yaml`
 ```
 kubelet.serviceFile:

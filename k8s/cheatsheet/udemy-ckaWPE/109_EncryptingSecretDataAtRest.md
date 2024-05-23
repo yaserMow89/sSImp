@@ -31,7 +31,7 @@ ps aux | grep kube-api | grep "encryption-provider-config"
 - You should just create a config file and pass it to `encryption-provider-config`
 - You can decide which resources should be encrypted
    - Defined under `resources`
-- You can encrypt using *providers
+- You can encrypt using *providers*
    - Some of the providers are:
       - Default is `identity`
          - Means *no encryption*

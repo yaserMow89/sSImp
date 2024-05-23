@@ -14,7 +14,7 @@ Monitoring Cluster Components
       - Network
 - Pod level metrics
    - Number of pods
-   - Preformance metrics
+   - Performance metrics
 - K8S Solution
    - As of now, no built in full feature solution
    - But there are some solutions available
@@ -28,7 +28,7 @@ Monitoring Cluster Components
          - How to deploy
             - You can deploy with it's repo available on `github`
             - And then deploy the required components using `kubectl create -f <deploymentFiles/>`
-               - Deploys a set of *Services*, *pods* and *roles* to enable the Metrics Server to pull for prefomance metrics from the *nodes* in the cluster
+               - Deploys a set of *Services*, *pods* and *roles* to enable the Metrics Server to pull for performance metrics from the *nodes* in the cluster
             - Once deployed give it some time to get the data
          - `k top node` can be used to see the metrics related to *nodes*
          - `k top pod` can be used to see the metrics related to *pods*

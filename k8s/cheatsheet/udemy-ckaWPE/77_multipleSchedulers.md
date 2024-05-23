@@ -14,12 +14,33 @@ Multiple Schedulers
       kind: KubeSchedulerConfiguration
       profiles:
          - schedulerName: default-Scheduler
+      leaderElection:         # This field is required only when you have multiple copies of scheduler running on different master nodes
+         leaderElect: true
+         resrourceNamespace: kube-system
+         resourceName: lock-object-my-scheduler
       ```
+      - Above file is fed to the `service` file as configuration file for a scheduler (Used to be the *old way* of deploying it)
 
-## How to deploy your own scheduler
+## How to deploy your own scheduler (*New Way*)
 - Earlier used to be done as a process, but these days you do it using a pod, same as every other control-plane component, and below is how to do it:
    - Create a *pod* definition file
-      - Pass `kubeconfig` property,which is the path to the scheduler config file and contains the authentication information to connecto to the k8s **api-server**
+      - Pass `kubeconfig` property,which is the path to the scheduler config file and contains the authentication information to connect to to the k8s **api-server**
+      ```
+      apiVersion: v1
+      kind: Pod
+      metadata:
+         name: my-sch
+         namespace: kube-system
+      spec:
+         containers:
+         - command:
+            - kube-scheduler
+            - --address=127.0.0.1
+            - --kubeconfig=/etc/kubernetes/scheduler.conf
+            - --config=/etc/kubernetes/my-scheduler-config.yml # custom configuration file
+           image: k8s.gcr.io/kube-scheduler-amd64:v1.11.3
+           name: kube-scheduler
+      ```
       - pass custom *kube scheduler configuration file* as a `config` option
          - The *name* is also specified in this file
          - One more option for this file is `leaderElectOption`
@@ -38,4 +59,4 @@ Multiple Schedulers
    k get events -o wide
    ```
       - Is seen under the `source` column
-   - `k get logs <schedulerName> --name-space=<namespaceName>`
+   - `k logs <schedulerName> --name-space=<namespaceName>`

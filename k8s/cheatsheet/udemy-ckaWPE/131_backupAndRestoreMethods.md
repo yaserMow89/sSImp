@@ -75,4 +75,3 @@ ETCDCTL_API=3 etcdclt snapshot status snapshot.db
       ```
       --key=/etc/etcd/etcd-server.key
       ```
-### Persistent volumes

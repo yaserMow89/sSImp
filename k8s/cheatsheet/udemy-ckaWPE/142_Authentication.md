@@ -33,8 +33,11 @@ Authentication
          3. User ID
          4. Groups (Optional)
       - Pass the filename as an option to the `kube-apiserver` `kube-apiserver --basic-auth-file=<fileName>.csv` and then restart to take effect
+         - In case of tokens the option would be `--token-auth-file=<filename>.csv`
       - If the cluster is created using the *kubeadm* tool, then you must modify the pod for `kube-apiserver` and then it will be restarted with the new modifications, must also include the file in the pod as a volume
       - To Authenticate using basic credentials, specify the username and password in a `curl` command like: `curl -v -k https://<masterNodeIP>:6443/api/v1/pods -u "<userName>:<password>"`
+         - In case of tokens while performing the authorization `curl -v -k https://<masterNodeIP>:6443/api/v1/pods --header "Authorization: Bearer <token>"`
+   - The following is redundant only
    - Similarly a token file can be passed
       - Four Columns
          1. Token

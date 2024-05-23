@@ -57,3 +57,4 @@ k rollout undo deployment/<depName>
 - `k rollout pause/resume deploy/<depName>`
 - `k rollout undo deploy/<depName>` --> To the last revision
 - `k rollout undo deploy/<depName> --to-revision=<revNumber>`
+- `k rollout history deploy <depName> --revision=<revNumber>`

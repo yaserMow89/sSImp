@@ -31,7 +31,7 @@ Configure Scheduler Profiles
       - **Binding** is **DefaultBinder**
 #### Extension points
 - What **plugins** go where is defined by *extension points*
-- At each *stage* there is an *extension point* which a *plugin* can be pluged to
+- At each *stage* there is an *extension point* which a *plugin* can be plugged to
 - The extensions are scattered in the following order:
    - For the *Scheduling Queue* there is *queueSort* plug in
    - For *Filtering*
@@ -49,3 +49,4 @@ Configure Scheduler Profiles
       - postBind
 
 ## How to change the Default Behavior
+- Different `profiles` for each scheduler config file and attach or detach plugins

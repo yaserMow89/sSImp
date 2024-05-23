@@ -1,7 +1,7 @@
 Cluster Upgrade Process
 =======================
- - K8S components does not have be in the same version
- - None of the components should be at a higher version that the **kube-apiserver**, since it is the primary component in the *control-plane* and all components talk to each other through this
+ - K8S components do not have to be in the same version
+ - None of the components should be at a higher version than the **kube-apiserver**, since it is the primary component in the *control-plane* and all components talk to each other through this
  - **controller-manager** and **kube-scheduler** can be at *one version lower*
 - **kubelet** and **kube-proxy** can be at *two versions lower*
 - **kubectl** can be *one higher or one lower*
@@ -25,7 +25,7 @@ Cluster Upgrade Process
    2. **Worker Nodes**
       - Several strategies to upgrade them
          - **All at once**
-            - All pods are down, downtime, users not able to access applications
+            - All pods are down, during downtime users not able to access applications
          - **one at a time**
          - **Add new nodes**
             - Node with newer software version
@@ -64,6 +64,7 @@ Cluster Upgrade Process
                - `apt upgrade -y kubeadm=<desiredVersion>`
             3. Upgrade the `kubelet`
                - `apt upgrade -y kubelet=<desiredVersion>`
+            - Step mentioned below is not working and also is not mentioned in the documentation
             4. Upgrade node configuration for the new `kubelet` version
                - `kubeadm upgrade node config --kubelet-version <newKubeletVersion>`
             5. Restart the `kubelet` service
