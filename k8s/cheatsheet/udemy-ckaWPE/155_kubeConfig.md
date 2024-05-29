@@ -83,3 +83,7 @@ users:         # Array
 - Can be passed in various ways
    1. Using the field: `certificate-authority`, `client-certificate` and `client-key`
    2. Can be passed as data, like `certificate-authority-data` and provide the certificate data as `base64`
+
+
+### Useful commands
+- An alternate `config` file could be passed to the `kubectl` using `k --kubeconfig=<myCustomConfig>`

@@ -22,7 +22,7 @@ Multiple Schedulers
       - Above file is fed to the `service` file as configuration file for a scheduler (Used to be the *old way* of deploying it)
 
 ## How to deploy your own scheduler (*New Way*)
-- Earlier used to be done as a process, but these days you do it using a pod, same as every other control-plane component, and below is how to do it:
+- Earlier used to be done as service, but these days you do it using a pod, same as every other control-plane component, and below is how to do it:
    - Create a *pod* definition file
       - Pass `kubeconfig` property,which is the path to the scheduler config file and contains the authentication information to connect to to the k8s **api-server**
       ```
