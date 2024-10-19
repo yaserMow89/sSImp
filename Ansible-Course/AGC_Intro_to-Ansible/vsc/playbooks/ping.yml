@@ -4,4 +4,5 @@
     tasks:
       - name: ping all servers
         action: ping
+        register: PING_RESULT
 
