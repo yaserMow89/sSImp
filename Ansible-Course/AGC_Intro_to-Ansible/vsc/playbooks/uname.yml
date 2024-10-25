@@ -1,6 +1,0 @@
-# uname.yml
----
-  - hosts: all 
-    tasks: 
-      - name: Get OS Type
-        shell: cat /etc/os-release 
