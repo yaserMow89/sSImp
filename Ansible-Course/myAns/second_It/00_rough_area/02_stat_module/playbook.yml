@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Working with *stat* module.
+      stat:
+        path: /home/vagrant/file
+      register: file_metadata
+    - name: Print file_metadata.
+      debug:
+        var: file_metadata

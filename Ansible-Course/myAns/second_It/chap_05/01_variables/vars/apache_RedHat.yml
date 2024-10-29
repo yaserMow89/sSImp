@@ -1,0 +1,4 @@
+---
+
+package_installer_name: yum
+apache_service_name: apache2

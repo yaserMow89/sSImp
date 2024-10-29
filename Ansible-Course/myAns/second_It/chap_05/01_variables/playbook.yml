@@ -1,0 +1,22 @@
+---
+
+- hosts: all
+  gather_facts: true
+
+  pre_tasks:
+    - include_vars: "{{ item }}"
+      with_first_found:
+        - "appache_{{ ansible_os_family }}.yml"
+        - "apache_{{ ansible_os_family }}.yml"
+    
+
+  tasks:
+    - name: Print package_installer_name.
+      debug:
+        var: "{{ package_installer_name }}"
+    - name: Print os family
+      debug:
+        var: "{{ ansible_os_family }}"
+    - name: Update cache
+      "{{ package_installer_name }}":
+        update_cache: true

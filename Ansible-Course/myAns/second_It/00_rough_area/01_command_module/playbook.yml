@@ -1,0 +1,10 @@
+---
+
+- hosts: all
+  become: True
+
+  tasks:
+    - name: Check for a file existence
+      command: >
+        touch /home/vagrant/Desktop.md
+        creates=/home/vagrant/Desktop.md

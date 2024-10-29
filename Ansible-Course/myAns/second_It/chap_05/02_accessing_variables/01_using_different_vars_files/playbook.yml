@@ -1,0 +1,26 @@
+---
+
+- hosts: all
+  gather_facts: true
+
+  pre_tasks:
+    - include_vars: "{{ item }}"
+      with_first_found:
+        - "{{ ansible_os_family }}_vars.yml"
+        - "default_vars.yml"
+
+  tasks:
+    # - name: Print facts.
+    #   debug:
+    #     var: ansible_facts
+    #   tags: facts_only
+    - name: Print OS family.
+      debug:
+        var: ansible_os_family
+    - name: Print ip for eth0.
+      debug:
+        var: "ansible_facts.{{ network_adapter_name }}.ipv4.address"
+      tags: specific
+    - name: eth only
+      debug:
+        var: ansible_eth0
