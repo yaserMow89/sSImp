@@ -1,0 +1,12 @@
+---
+  - name: Install Node.js and npm.
+    dnf:
+      name: npm
+      state: present
+      enablerepo: epel
+  - name: Install npm modules required.
+    npm:
+      name: "{{ item }}"
+      global: yes
+      state: present
+    with_items: "{{ node_npm_modules }}"

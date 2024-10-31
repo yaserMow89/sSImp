@@ -6,7 +6,7 @@
   vars:
     node_apps_location: /usr/local/opt/node
 
-  tasks:
+  pre_tasks:
   - name: Install EPEL repo.
     dnf:
       name: epel-release
@@ -23,16 +23,11 @@
     service:
       name: firewalld
       state: stopped
-  - name: Install Node.js and npm.
-    dnf:
-      name: npm
-      state: present
-      enablerepo: epel
-  - name: Install forever.
-    npm:
-      name: forever
-      global: true
-      state: present
+  
+  roles:
+    - nodejs
+  
+  tasks:
   - name: Ensure Node.js app folder exists.
     file:
       path: "{{ node_apps_location }}"
@@ -51,3 +46,4 @@
   - name: start example Node.js app.
     command: "/usr/local/bin/forever start {{ node_apps_location }}/app/app.js"
     when: "forever_list.stdout.find(node_apps_location + '/app/app.js') == -1"
+    

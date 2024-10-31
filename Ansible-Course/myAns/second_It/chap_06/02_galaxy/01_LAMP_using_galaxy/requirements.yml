@@ -1,0 +1,24 @@
+---
+
+roles:
+  - name: geerlingguy.firewall
+
+  - name: geerlingguy.php
+    version: 4.3.1
+
+  - name: passenger
+    src: https://github.com/geerlingguy/ansible-role-passenger
+    version: 2.0.0
+  
+  - name: geerlingguy.mysql
+
+  - name: geerlingguy.apache
+
+  - name: geerlingguy.php
+  
+  - name: geerlingguy.php-mysql
+  
+  # Following is example
+  # - name: my-role
+  # - src: https://roles.example.com/ansible/galaxy/my-role.tar.gz
+  # - version: 2.2.2

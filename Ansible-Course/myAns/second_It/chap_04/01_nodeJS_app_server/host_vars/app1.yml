@@ -1,0 +1,7 @@
+---
+node_npm_modules:
+  - rsync
+  - forever
+  - request
+  - express
+  - moment
