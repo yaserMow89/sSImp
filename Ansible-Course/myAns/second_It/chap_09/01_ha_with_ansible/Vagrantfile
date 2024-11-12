@@ -1,0 +1,46 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.box = "generic/centos7"
+  config.ssh.insert_key = false
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.provider :virtualbox do |v|
+    v.memory = 1024
+    v.linked_clone = true
+  end
+
+  config.vm.define "varnish" do |varnish|
+    varnish.vm.hostname = "varnish"
+    varnish.vm.network :private_network, ip: "192.168.56.4"
+  end
+
+  config.vm.define "app-1" do |app1|
+    app1.vm.hostname = "app1"
+    app1.vm.network :private_network, ip: "192.168.56.5"
+  end
+
+  config.vm.define "app-2" do |app2|
+    app2.vm.hostname = "app2"
+    app2.vm.network :private_network, ip: "192.168.56.6"
+  end
+
+  config.vm.define "cache-server" do |cache|
+    cache.vm.hostname = "cache"
+    cache.vm.network :private_network, ip: "192.168.56.7"
+  end
+
+  config.vm.define "db-master" do |dbm|
+    dbm.vm.hostname = "dbm"
+    dbm.vm.network :private_network, ip: "192.168.56.8"
+  end
+
+  config.vm.define "db-slave" do |dbs|
+    dbs.vm.hostname = "dbs"
+    dbs.vm.network :private_network, ip: "192.168.56.9"
+  end
+
+end
