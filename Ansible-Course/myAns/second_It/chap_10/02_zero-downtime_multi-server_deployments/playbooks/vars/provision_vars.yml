@@ -1,0 +1,11 @@
+---
+
+nodejs_install_nmp_user: root
+npm_config_prefix: "/usr"
+nodejs_npm_global_packages:
+  - forever
+
+firewall_allowed_tcp_ports:
+  - "22"
+  - "8080"
+  

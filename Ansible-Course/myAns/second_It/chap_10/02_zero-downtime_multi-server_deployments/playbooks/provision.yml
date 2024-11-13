@@ -1,0 +1,27 @@
+---
+
+- hosts: nodejs-api
+  become: true
+
+  vars_files:
+    - vars/provision_vars.yml
+
+  pre_tasks:
+    - name: Update cache if needed.
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+    
+    - name: Ensure port 8080 is open
+      ansible.posix.firewalld:
+        port: 8080/"{{ item }}"
+        permanent: true
+        state: enabled
+      with_items:
+        - tcp
+        - udp
+    
+  roles:
+    - geerlingguy.firewall
+    - geerlingguy.nodejs
+    - geerlingguy.git
