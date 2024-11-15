@@ -1,0 +1,46 @@
+---
+
+- hosts: ssh
+  become: true
+
+  vars_files:
+    - vars/generic_vars.yml
+  handlers:
+    - name: restart ssh
+      service:
+        state: restarted
+        name: ssh
+  
+  tasks:
+    - name: Update ssh configuration to be more secure
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        line: "{{ item.line }}"
+        regexp: "{{ item.regexp }}"
+        state: present
+        validate: "sshd -t -f %s"
+      with_items:
+        - regexp: "^PasswordAuthentication"
+          line: "PasswordAuthentication no"
+        - regexp: "^PermitRootLogin"
+          line: "PermitRootLogin no"
+      notify: restart ssh
+    
+    - name: Remove unused packages
+      package:
+        name: "{{ item.name }}"
+        state: absent
+        purge: yes
+      with_items:
+        - name: nano
+        - name: sendmail
+    
+    - name: Configure open ports
+      ufw:
+        rule: "{{ item.rule }}"
+        port: "{{ item.port }}"
+        proto: "{{ item.proto }}"
+      with_items:
+        - { rule: 'allow', port: 22, proto: 'tcp'}
+        - { rule: 'allow', port: 80, proto: 'tcp'}
+        - { rule: 'allow', port: 123, proto: 'udp'}
