@@ -4,3 +4,4 @@ video/
 sm-course-resources/
 .vagrant/
 *.log
+awx-devel/
