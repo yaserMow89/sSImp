@@ -1,0 +1,38 @@
+---
+
+- hosts: all
+  become: true
+
+  vars_files:
+    - vars/main.yml
+
+  pre_tasks:
+    - name: Update cache
+      apt:
+        update_cache: true
+        cache_valid_time: 600
+    
+  roles:
+    - geerlingguy.firewall
+    - geerlingguy.nginx
+    - geerlingguy.certbot
+  
+  tasks:
+    - name: Ensure nginx docroot exist
+      file:
+        path: "{{nginx_docroot }}"
+        state: directory
+        recurse: true
+    
+    - name: Copy example html.index
+      copy:
+        src: files/index.html
+        dest: "{{ docroot }}/index.html"
+        mode: 0755
+
+    - name: Copy nginx server config
+      copy:
+        src: templates/https-letsencrypte.conf.j2
+        dest: /etc/nginx/sites-enabled/https-letsencrypt.conf
+        mode: 0644
+      notify: restart nginx
