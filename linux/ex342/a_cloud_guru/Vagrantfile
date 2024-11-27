@@ -1,0 +1,27 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "generic/rhel8"
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+  config.ssh.insert_key = false
+  config.vm.provider :virtualbox do |v|
+    v.memory = 512
+    v.cpus = 1
+  end
+
+  boxes = [
+    {:name => "rails-demo", :ip => "192.168.56.7"},
+    {:name => "secondary" , :ip => "192.168.56.8"}
+  ]
+
+  boxes.each do |opts|
+    config.vm.define opts[:name] do |config|
+      config.vm.hostname = opts[:name]
+      config.vm.network :private_network, ip: opts[:ip]
+    end
+  end
+
+end
