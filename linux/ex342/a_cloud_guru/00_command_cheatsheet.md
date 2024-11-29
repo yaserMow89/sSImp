@@ -90,3 +90,54 @@ e2fsck                           # -n --> non-interactiv, readonly mount
                                  # -p --> Attempts Automatic repair
 dumpe2fs                         # Outputs info about the defined ext4 system
 ```
+
+### Troubleshooting LVM
+
+```bash
+/etc/lvm/lvm.conf          # Set archive = 1 will enable archiving for lvm
+/etc/lvm/archive           # Archive location
+vgcfgrestore               # Volume Group Configuration restore command
+vgcfgrestore -l [vg Name]  # Lists available restore points for specific vg
+vgcfgrestore -f [archive]  # Uses archive file to restore a lv
+lvchange -a[n|y]           # Activate or deactivate an lv
+```
+
+### Recovering data from Encrypted File System
+
+```bash
+cryptsetup luksHeaderBackup [luks drive] --header-backup-file [dst. file address]
+cryptsetup luksHeaderRestore [luks drive] --header-backup-file [file address]
+cryptsetup luksAddKey [luks drive] [luks key; can also be a file containing key]
+/etc/crypttab        # Used for auto opening of luks encrypted drives
+                     # For example: luks	efd3beaa-b54b-4962-8fa1-6dfd69c25094	/root/secret.key
+cryptsetup luksDump [luks drive]
+
+```
+
+### Troubleshooting ISCSI
+
+## Package Management
+
+## Networking issues
+
+### Networking Overview
+
+### Verify Network Connectivity
+
+```bash
+ping        # -c [number]--> count for number of packets
+            # -f --> flood destination server
+            # -s [number] --> size of packet to be sent
+telnet [ip] [port]      # Can be port specific and leverages TCP Connections, unlike ping which uses UDP
+
+ncat (nc) [dest ip] [port]       # Tests both TCP and UDP
+   ncat -l 443                   # Starts listening on port 443
+   ncat [dest ip] 443            # Starts session between current device and target server on port 443
+
+```
+
+### Fixing Connectivity Issues
+
+```bash
+
+```
