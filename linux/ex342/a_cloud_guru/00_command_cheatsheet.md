@@ -139,5 +139,76 @@ ncat (nc) [dest ip] [port]       # Tests both TCP and UDP
 ### Fixing Connectivity Issues
 
 ```bash
+firewall-cmd --list-all    # List active rules on firewall
+firewall-cmd --zone=public --add-port=[port number]/[tcp/udp]     # To allow connections to a port
+                                                                  # It is not persistent
+                                                                  # Persistence can be achieved via either --permanent or --runtime-to-permanent
+firewall-cmd --zone=public --add-port=80/tcp    # Allows connections to http
+nmcli d show
+nmcli c show
+nmcli c up [connection name]
+
+```
+
+### 22 Inspecting Network Traffic
+
+```bash
+watch [option|s] "[command to run]"     # Runs a command periodically
+   watch -n 5 "curl localhost"   # Runs the command every 5 seconds
+
+# flags for wireshark and tcpdump are similar:
+#  -c packet count
+#  -w output file
+#  -r read file
+#  -i interface
+tcpdump -i [interface]     # Shows interface specific data
+tcpdump -i [interface] 'port [port number]'  # Filters traffic related to a specific port
+```
+## Application Issues
+
+### Identifying Library Dependencies
+
+```bash
+ldconfig -p          # List all the libraries on the computer
+ldd                  # List shared libraries, should be used with an application
+   ldd $(which httpd)
+```
+
+### Identifying Memory Leaks
+
+```bash
+valgrind
+```
+
+### Application Debugging tools
+
+```bash
+ltrace      # Library tracing
+ltrace [command absolute path] target_file
+ltrace $(whcih cat) file.txt
+
+strace
+
+```
+
+### SELinux Issue
+
+```bash
+ls -Z [File Name]    # Shows SELinux security context info
+seinfo -u            # Shows list of user roles
+semanage login -l    # Shows login roles assigned to the current user
+semanage user -l     # Shows various selinux user options, as well as roles which can be assigned to these users
+seinfo -r            # Shows object roles that can be assigned
+semanage port -l     # Shows Associated ports for various services
+
+chcon -R --reference [source context file] [destination context file]
+   # Would change the context of the dest file according to the source file
+   # chcon stands for change context
+```
+
+## Authentication Issues
+
+### PAM Issues
+```bash
 
 ```
