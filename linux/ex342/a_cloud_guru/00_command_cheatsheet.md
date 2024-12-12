@@ -212,3 +212,10 @@ chcon -R --reference [source context file] [destination context file]
 ```bash
 
 ```
+
+## Aiding Third-Party Investigation
+
+### Creating Kernel Crush Dumps
+```bash
+
+```
