@@ -19,7 +19,7 @@
   - Each node is the root of a new subtree of the overall tree
     - Each of these subtrees represent a portion of the overall database
   - Each domain or directory can be further divided into portions called *subdomains* </br>
-  ![DNS Tree](./screenshots/1_chapter1_dns_tree.png) </br>
+  ![DNS Tree](./screenshots/1_chapter01_dns_tree.png) </br>
   - Each domain has a domain's name, a domain's *domain name* identifies it's position in the database, much like an *absolute path*
   - In DNS the domain name is the sequence of labels from the node at the root of the domain, to the root of the whole tree, with dots separatin labels
   - Each domain can be further broken into subdomains and the responsibility for those subdomains can be doles out to different organizations
@@ -29,7 +29,7 @@
   - *berkeley.edu* is now independent of the *.edu* and conatains all domain names that end in *berkeley.edu*, the zone *edu* on the other contains domain names that end in *edu* but are not delegated zones, such as *berkeley.edu*
   - *berkeley.edu* may be divided into subdomains liek *cs.berkeley.edu* and some of these subdomains may themselves be separate *zones*
     - In case *cs.berkeley.edu* is delegated to other organization, then *berkeley.edu* does not contain domain names that end in *cs.berkeley.edu* </br>
-    ![DNS Remote managemet of subdomains](./screenshots/1_chapter1_remote_management.png)
+    ![DNS Remote managemet of subdomains](./screenshots/1_chapter01_remote_management.png)
 - Domain names are used as *indexes* into the DNS database
   - Data attached to a domain name inside the database
   - Like in directories that contain subdirectories and files, domain names can also contain subdomains and hosts
@@ -38,4 +38,4 @@
   - IP, mail routing, etc.
   - Hosts may have one or more domain name aliases, which are simply pointers from one domain name (the alias) to another (official domain name)
     - Look at the below figure and look at mailhub.nv </br>
-    ![Aliases in DNS](./screenshots/1_chapter1_aliases.png)
+    ![Aliases in DNS](./screenshots/1_chapter01_aliases.png)
