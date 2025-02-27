@@ -5,3 +5,4 @@ sm-course-resources/
 .vagrant/
 *.log
 awx-devel/
+.DS_Store

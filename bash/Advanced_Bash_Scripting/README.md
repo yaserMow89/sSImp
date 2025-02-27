@@ -1,0 +1,2 @@
+- My notes from the course Advnaced Bash Scripting on KodeKloud
+- All the credit goes to KodeKloud
