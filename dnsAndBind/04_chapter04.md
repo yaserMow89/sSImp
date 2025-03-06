@@ -193,4 +193,67 @@ $TTL  3h
 
 ## Setting up a BIND configuration file
 
--
+- Instruction for nameserver to read zones' data file
+- Configuration file's format is Bind specific
+- Usually a line for the *directory* in which zone files are located
+  - This can be overridden, by the `file` parameter within each zone's statement
+- Only one `options` statements in the configuration file
+- On a primary server one *zone statement* for each zone datafile to be read
+  - Starts with *zone* keyword
+  - Zone's domain name
+  - And the class; *in* stands for internet
+    - The default class is *in* for zone statement, and even if you delete the class from the statement, it will be assigned automatically
+  - *type* master indicating a primary server
+  - And *file* for zone data file
+- An example of config for reading *root hints file* i also provided below
+  - This comes by default with bind9, and you don't have to add one, but if you do it will override the default one
+
+
+```bind
+
+options {
+  directory "/var/named";
+  // Additional Options here
+}
+
+zone "movie.edu" in {
+  type master;
+  file "db.movie.edu"
+}
+
+zone "249.249.192.in-addr.arpa" in {
+  type master;
+  file "db.192.249.249";
+}
+
+zone "253.253.192.in-addr.arpa" in {
+  type master;
+  file "db.192.253.253";
+}
+
+zone "0.0.127.in-addr.arap" in {
+  type master;
+  file "db.127.0.0";
+}
+
+zone "." in {
+  type hint;
+  file "db.cache"
+}
+```
+
+## Abbreviations
+
+- Revising the zone data files
+
+### Appending Domain Names
+
+- The second field of a *zone* statement specifies a domain name
+  - Key to most useful shortcut
+  - Origin of all the data in the zone datafile
+  - The origin is appended to all names in the zone file, that don't end with a dot
+- So instead of entring `shrek.movie.edu. IN A 192.249.249.2` in `db.movie.edu` we could just add `shrek IN A 192.249.249.2`
+- And instead of `2.249.249.192.in-addr.arpa. IN PTR shrek.movie.edu.` we could just add `2 IN PTR shrek.movie.edu.` in the `db.192.249.249` file
+- What if we forget to add the dot, in a fully typed entry, so an entry like this `shrek.movie.edu IN A 192.249.249.2` would be translated into an entry like `shrek.movie.edu.movie.edu` not what you intended at all
+
+### The @ Notation
