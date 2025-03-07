@@ -257,3 +257,134 @@ zone "." in {
 - What if we forget to add the dot, in a fully typed entry, so an entry like this `shrek.movie.edu IN A 192.249.249.2` would be translated into an entry like `shrek.movie.edu.movie.edu` not what you intended at all
 
 ### The @ Notation
+
+- If a domain name is as the origin
+- Can be used in the SOA record
+
+### Repeat Last Name
+
+- A Resource Record Name is a space bar or tab --> The name from the last recrod resource is used
+
+```bind
+wormhole  IN  A   192.249.249.1
+          IN  A   192.253.253.1
+```
+
+- Can be used even if the resource records are different
+
+
+### The shortened Zone Datafiles
+
+- Let's go through our zone datafiles
+
+```bind
+$TTL    3h
+;
+; Origin added to names not ending
+; in a dot: movie.edu
+
+@ IN  SOA toystory.movie.edu. al.movie.edu. (
+                          1         ; Serial
+                          3h        ; Refresh after 3 hours
+                          1h        ; Retry after 1 hour
+                          1w        ; Expire after 1 week
+                          1h )      ; Negative caching TTL of 1 hour
+
+; Nameserves (The @ is Implied)
+;
+                  IN    NS    toystory.movie.edu.
+                  IN    NS    wormhole.movie.edu.
+
+; Addresses for the canonical names
+;
+localhost       IN    A     127.0.0.1
+shrek           IN    A     192.249.249.2
+toystory        IN    A     192.249.249.3
+monsters-inc    IN    A     192.249.249.4
+misery          IN    A     192.253.253.2
+shining         IN    A     192.253.253.3
+carrie          IN    A     192.253.253.4
+
+wormhole        IN    A     192.249.249.1
+
+; Aliases
+;
+toys            IN    CNAME toystory
+mi              IN    CNAME monsters-inc
+wh              IN    CNAME wormhole
+
+; Interface specific names
+;
+wh249           IN    A     192.249.249.1
+wh253           IN    A     192.253.253.1
+```
+
+## Hostname Checking
+
+- For conformance to RFC 952
+  - If not conforming, considered as a syntax error by bind
+- Name field and data field in Resource Records
+- Hostnames are in the `name` field of `A` records and `MX` records
+- Hostnames are also in the `data` field of `SOA` and `NS` records
+- `CNAME`s don't have to conform to the host-naming rules, because they point to names that are not hostnames
+
+```bind
+<name>      <class>     <type>      <data>
+toystory      IN          A           192.249.249.3
+```
+
+- Allowed to
+  - Contain alphabetic
+  - Numeric
+- Underscores are not allowed
+- Hyphen allowed if in the middle
+- names that are not hostnames can consist of any ASCII chars
+- There is a way to turn the errors into warning messages for the hostnames (This shouldn't be used for ever)
+- The second statement would completely ignore them
+- If you are backup for a zone and getting errors with the hostnames and you don't have controll over it, you can still do that, only use `slave` instead of `master`
+  - As in 3rd statement
+- The same can be done for responses for queries
+  - As in 4th statement
+
+```bind
+options {
+  check-names master warn;
+  check-names master ignore;
+  check-names slave ignore;
+  check-names response ignore;
+};
+```
+
+- Bind defaults are
+
+```bind
+  options {
+  check-names master fail;
+  check-names slave warn;
+  check-names response ignore;
+  };
+```
+
+- Name checking can also be specified in a per-zone basis, which would override the global configuration
+- The reason for having 2 fields in the zone specific error handling configuration, whereas we have 3 fields in the global configuration is that the context is already defined in the zone
+  - Can be seen in the following example
+  - The context is master and it is defined in teh first line of the zone statement
+
+```bind
+  zone "movie.edu" in {
+    type master;
+    file "db.movie.edu"
+    check-names fail
+  };
+```
+
+## Tools
+
+- *h2n*
+  - For converting `/etc/hosts` into the zone file
+  - But I think it is not used widely today
+
+## Bind 9 Tools
+
+- `named-checkconf`
+- `named-checkzone`
