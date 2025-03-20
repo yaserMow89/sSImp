@@ -388,3 +388,132 @@ options {
 
 - `named-checkconf`
 - `named-checkzone`
+
+## Running a primary nameserver
+
+- Primary and seconary
+
+### Starting up the Nameserver
+
+- BIND is already intsalled
+- Listens for queries on a reserved port
+
+### Check for Syslog Errors
+
+- Logs are being managed by `journalctl` on *Debian* as of now
+
+  * If you forget the **Resouce Record** type you will get and `Uknown RR type` error, as below:
+
+  ```bash
+  Mar 10 06:14:15 ns1 named[21787]: /etc/bind/zones/db.ps.home.lab:33: unknown RR type '10.85.85.159'
+  Mar 10 06:14:15 ns1 named[21787]: zone ps.home.lab/IN: loading from master file /etc/bind/zones/db.ps.home.lab failed: unknown class/type
+  Mar 10 06:14:15 ns1 named[21787]: zone ps.home.lab/IN: not loaded due to errors.
+  # The same error will pop up also if you literally put an unknow RR type
+  Mar 10 06:16:45 ns1 named[21863]: /etc/bind/zones/db.ps.home.lab:33: unknown RR type 'NoRecordForThis'
+  Mar 10 06:16:45 ns1 named[21863]: zone ps.home.lab/IN: loading from master file /etc/bind/zones/db.ps.home.lab failed: unknown class/type
+  Mar 10 06:16:45 ns1 named[21863]: zone ps.home.lab/IN: not loaded due to errors.
+  ```
+
+  * If you misspell the keyword `zone` in the `named.conf.local` you will get an `uknown option` error, as follows
+
+  ```bash
+  Mar 10 06:19:32 ns1 named[21944]: /etc/bind/named.conf.local:9: unknown option 'zoe'
+  Mar 10 06:19:32 ns1 named[21944]: loading configuration: failure
+  Mar 10 06:19:32 ns1 named[21944]: exiting (due to fatal error)
+  ```
+
+  * If naming does not conform to the *RFC 952* you will get a `bad owner name message` as the following one
+
+  ```bash
+  Jul 24 20:56:26 toystory named[1496]: db.movie.edu:33: a_b.movie.edu: bad
+  owner name
+  ```
+
+  * For syntactic errors, look at the file and line number in the error
+
+
+## Running a Slave nameserver
+
+- A master, slave is minimum
+- Can have more than one primary
+- To know whether a server is master or slave for a zone, can be understood from the zone statement in the config file
+- *zone trnsfer* for the slave serveres
+- Slave can load from antoher slave
+- Advantage for **slave** nameservers is that you don't have to manage the zones for them
+- Disadvantage is that it doesnt get the data instantly
+  - Polls to see if it's data is current
+  - The polling interval is one of those numbers in the SOA record
+- A slave is primary for *db.cache* and *db.127.0.0*, cause they are the same across primary and slave servers
+  - And they are not transferred
+
+### Setup
+
+- Generaly making changes to the config files
+- masters line for each zone
+  - Telling the slave where should it get the official zone files for this zone
+- The zones files are at the directory specified by the line `directory` in the `options` statement
+- One zone statement is illustrated below as an example
+
+```bind
+zone "253.253.192.in-addr.arpa" in {
+  type slave;
+  file "bak.192.253.253";
+  masters { 192.249.249.3; };
+};
+```
+
+- There will be also a backup of these files
+- It would be better to keep the backup files isolated
+- Backup files start with `bak` prefix
+- slaves ar eprimary for `0.0.127`
+
+### Backup Files
+
+- Not required to be stored by slaves
+- If there is one, it is read at startup and then matched with the master
+- They are useful in case master is down, then slave has only backup option to pull zone files from
+
+## SOA Values
+
+- *serial nubmer*
+  - Applies to all data within the zone
+  - Preferably starting at 1
+  - Some prefer to use data as in format YYYYMMDDNN (NN is the count of how many times a zone was modified on that day)
+  - Important that it increases whenever you make changes
+  - Slave asking for zone data, first asks for the Serial number
+- *refresh*
+  - For a slave --> How often to check that the data for the zone is updated
+- *retry*
+  - If the slave fails to reach the master after *refresh* interval, it starts trying to connect every *retry* seconds
+  - Normally it is shorter than *refresh*, but doesn't have to be
+- *expire*
+  - If the slaves fails to contact master for *expire* seconds, the slave expires the zone
+  - Zone data is too old to be useful
+- *Negative caching TTL*
+  - All negative responses from the nameservers
+
+- You can specify Units of second, minutes, hour, day and week
+
+## Multiple Master Servers
+
+- Up to 10
+- Add them in the config file and separate them with semicolons
+- Can start a list of masters with a name and then refer to the list
+- Slave quries all masters and get the zones files from the master with highest *serial*
+  - If multiple match for the highest *serial*, it will trasnfer from the first of those masters in the list
+
+```bind
+masters "movie-masters" {
+  192.249.249.3; 192.249.249.4;
+};
+
+zone "movie.edu" in {
+  type slave;
+  file "bak.movie.edu";
+  masters { movie-mastrs; };
+};
+```
+
+## Adding more Zones
+
+- Add more *zone* statements to your configuration file
