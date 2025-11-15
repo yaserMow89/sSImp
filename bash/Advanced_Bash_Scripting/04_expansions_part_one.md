@@ -113,4 +113,132 @@
 
 - **Patterns** are going to be discussed here
 - A common patter in file systems is the use of file name extensions such as `.txt` suffix
--
+- In shell scripting we can get an output of a vaiable other than what is assigned to it, by putting special characters inside the curely braces
+- Two of these special chars are `#` and `%`
+- They help remove prefix (`#`) and suffix (`%`) patterns from strings, by using the parameter expansion concept
+- The `#` is used for matching prefixes and the `%` is used for matching suffixes
+  - Looking at the following example you can see how `#` remove the matching prefix from the output
+
+      ```bash
+      #!/usr/bin/env bash
+
+      greetings="Hello World"
+
+      echo "${greetings#H}"
+
+      ## Would print
+      # ello World
+      ```
+    - The pattern we provide should exactly match the beginning of the string (prefix)
+        - Assume we do the following
+
+        ```bash
+        #!/usr/bin/env bash
+
+        greetings="Hello World"
+
+        echo "${greetings#e}"
+
+        ## Would print
+        # Hello World
+        ```
+
+    - The whole pattern should match the starting script, otherwise pattern gets discarded
+
+      ```bash
+      #!/usr/bin/env bash
+
+      greetings="Hello new World"
+
+      echo "${greetings#Helxo}"
+
+      ## output would be
+      # Hello new World
+      ```
+
+    - It is case sensitive
+  - Counter to `#` there is `%`, which removes from the end
+
+    ```bash
+    #!/usr/bin/env bash
+
+    greetings="Hello World"
+
+    echo "${greetings%d}"
+
+    ## Would print
+    # Hello Worl
+
+    ## Similarly if you go like
+
+    echo "${greetings%orld}"
+
+    ## Would print
+    # Hello W
+    ```
+
+    - The following is an example to get a list of the config files in the `/etc/` directory but without their `.conf` part
+      - This might skip the files that have something after the `.conf` part
+
+      ```bash
+      #!/usr/bin/env bash
+
+      conf_files=$(ls /etc | grep -E "*.conf")
+
+      for file in ${conf_files}; do
+       	echo "${file%.conf}"
+      done
+      ```
+
+## Parameter - Part Two
+
+- The techinque in the last part wouldn't work all the time, for example in the final example in the last part
+  - we have some files in the `/etc/` directory which have the `.conf` part and have something after it also, like `.conf.d`
+    - How can we get these directories also
+      - It can be done using asteris `*` in combination with parameter expansion, like this:
+
+      ```bash
+      !#/usr/bin/env bash
+
+      conf_files=$(ls /etc | grep -E "*.conf")
+
+      for file in ${conf_files}; do
+       	echo "${file%.conf*}"
+      done
+
+      ```
+- We can define what is a prefix and what is a suffix in other ways also
+  - Can use asterisk `*`
+- Example, we can remove everything before the first space with the following:
+
+  ```bash
+  echo "${my_var#* }"
+  ```
+
+- Here we are saying remove the last word and then stop once reach a space `echo "${my_var% *}"`
+- Here remove everything after letter `l` like this `echo "${my_var%l*}"`
+- Now lets focus on a pitfall in linux file system
+  - Take the following vars as examples
+
+  ```bash
+  my_text_file="/home/my_username/text_file.txt"
+  my_python_file="/usr/bin/app.py"
+  ```
+
+  - Now having them divided like this
+
+  | prefix                | name            | suffix        |
+  |:---------------------:|:---------------:|:-------------:|
+  | `/home/my_username`   |  `my_username`  | `.tx`         |
+  | `/usr/bin/`           | `app`           | `.py`         |
+
+  - To revmove the prefix from the first one for example we would do: `echo "${my_text_file#*/}"`
+    - or the second one would be `echo "${my_python_file#*/}"`
+  - But we won't get the desired output, in both cases only the first `/` will be **removed**
+    - This happens because there is a one-to-one match between the prefix in the variable and the prefix removing pattern that we are passing in
+  - In such circumstances we can use **longest prefix/suffix** remove, done by doubling the char, as in the example below
+    - Instead of `echo ${my_python_file#*/}"` we can go `echo "${my_python_file##*/}"`
+      - It counts everything until the last `/` as prefix
+        - Anything prior to the last apperance of the `/` char would be counted as prefix
+    - Mostly longest prefix removal needs a wildcard like `*` to make the removal easier - this matches zero or more chars
+    - Now here to remove the suffixes for both these cases we can do `echo "${my_text_file%%.*}"` this can also be done using the shortest suffix removal method
