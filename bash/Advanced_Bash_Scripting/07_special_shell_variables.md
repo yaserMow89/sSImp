@@ -164,9 +164,86 @@ done
 
 ## pid
 
+- `$$` and `$!` store info about the processes executed by the scripts or commands
+  - Info on process IDs or commands initiated by us
+  - Only for command line initiated tasks
+- Starting a terminal will associate a tty to it
+- Any command has a life cycle
+- `$!`
+  - Keeps track of the last process ID in the background
+- `$$`
+  - info about the current shell's process id
+  - For a subshell it only returns the value of the parent shell
 
+## Zero (`$0`)
 
+- Two use cases
+  1. Get the name of the script being executed
+  2. Get the absolute path of a directory where a script is being executed
+- Stores the name of the script with it's path, whether it is absolute or relative
+- Usefull for usage messages within the scripts
+  - The following script would be a good example
 
+  ```bash
+  #!/usr/bin/env bash
+  set -e
 
+  readonly INVALID_CL_ARG_NUM="155"
 
--
+  terminate() {
+      local -r msg="${1}"
+      local -r code="${2:-150}"
+      echo "${msg}" >&2
+      exit "${code}"
+  }
+
+  usage() {
+
+  cat <<USAGE
+  Usage: special-shell.sh [arg]
+     This script reads the contents from a file using a filereader binary
+     Arguments:
+         filename: An existing non-empty file
+
+  USAGE
+  }
+
+  if [[ $# -ne 1 || ! -s "${1}" ]]; then
+      usage
+      terminate "Pass a single command line argument as a file that exists and is non-empty" "${INVALID_CL_ARG_NUM}"
+  fi
+
+  /usr/local/bin/filereader "${1}"
+
+  exit 0
+  ```
+
+## Underscore
+
+- Special Shell variable
+- Perform an operation on the last argument
+- Like in the below example
+
+```bash
+ls test
+
+cp $_ /tmp
+```
+
+  - Here the the `test` file is in the `$_` variable and we have copied it into the `/tmp`
+- This only stores the **last** argument of a command
+  - In case no arguments, it will be empty
+
+## Dash
+
+- Reflection of the options or flags of the current shell
+  - Can tweak the behavior of the shell
+- Might be different from system to system
+- Some of these configs are:
+  - `h` --> Remember the location of commands
+  - `B` --> Perform brace expansion
+  - `e` --> Exit immediately if a command exits with a non-zero status code; This is actually the `set -e` flag on the scripts
+  - `H` --> Enable history situation
+  - `i` --> Interactive shell
+  - `m` --> Job control is enabled
+  - `u` --> Treat unset vars as error when performing parameter expansion
