@@ -279,20 +279,3 @@ $7 <= low_salary {
 # Andy Luscomb 95000
 # Jing Ma 100000
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--
