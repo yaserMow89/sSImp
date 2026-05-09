@@ -6,3 +6,6 @@ sm-course-resources/
 *.log
 awx-devel/
 .DS_Store
+.terraform
+*.tfstate
+*.tfstate.backup
