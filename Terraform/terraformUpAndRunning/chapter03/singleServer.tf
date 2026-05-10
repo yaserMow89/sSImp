@@ -166,3 +166,29 @@ resource "aws_security_group" "instance" {
  \____|_| |_|\__,_| .__/ \__\___|_|     \___/____/
                   |_|
 */
+
+// Terraform state
+/*
+- Terraform state file --> on each run
+- File is `terraform.tfstate`
+- It contains mapping between resources in the config files and real world state of the resources
+- The output of the `plan` command is a diff of your config files and the actualy resources
+- How to manage state file in a team
+  - Shared location where all team members can access it
+  - Locking the file to avoid race conditions
+  - Isolaitng state files for different envs like prod and dev
+- Where to store the state file
+  - Not Version control
+  - Terraform backend:
+    - Default backend: local disk; what we have been doing all this time
+    - Remote backends: are available; like aws s3, azure storage, google and etc...
+      - Manual error
+        - on every `plan` or `apply` the state file will be loaded automatically by terraform
+      - Locking
+        - Natively supported by most of them
+      - Secrets
+        - Encryption supported
+        - Access permissions can be defined on them
+      - AWS S3 is a good choice if you are using aws
+
+*/
